@@ -5,15 +5,15 @@ import { Book } from "../models/book.model.js";
 // Add book to cart
 export const addToCart = async (req, res) => {
   try {
-    const { bookId, id } = req.headers;
+    const { bookid, id } = req.headers;
     
     // Validate bookId
-    if (!bookId) {
+    if (!bookid) {
       return res.status(400).json({ message: "Book ID is required" });
     }
     
     // Check if book exists
-    const book = await Book.findById(bookId);
+    const book = await Book.findById(bookid);
     if (!book) {
       return res.status(404).json({ message: "Book not found" });
     }
@@ -25,7 +25,7 @@ export const addToCart = async (req, res) => {
     }
     
     // Check if book is already in cart
-    const isBookInCart = userData.cart.includes(bookId);
+    const isBookInCart = userData.cart.includes(bookid);
     if (isBookInCart) {
       return res.json({
         status: "Success",
@@ -34,7 +34,7 @@ export const addToCart = async (req, res) => {
     }
     
     // Add book to cart using $push operator
-    await User.findByIdAndUpdate(id, { $push: { cart: bookId } });
+    await User.findByIdAndUpdate(id, { $push: { cart: bookid } });
     
     return res.json({
       status: "Success",
@@ -49,10 +49,11 @@ export const addToCart = async (req, res) => {
 // Remove book from cart
 export const removeFromCart = async (req, res) => {
   try {
-    const { bookId, id } = req.headers;
+    const { bookid} = req.params;
+    const { id } = req.headers;
     
     // Validate bookId
-    if (!bookId) {
+    if (!bookid) {
       return res.status(400).json({ message: "Book ID is required" });
     }
     
@@ -63,13 +64,13 @@ export const removeFromCart = async (req, res) => {
     }
     
     // Check if book is in cart
-    const isBookInCart = userData.cart.includes(bookId);
+    const isBookInCart = userData.cart.includes(bookid);
     if (!isBookInCart) {
       return res.status(400).json({ message: "Book is not in cart" });
     }
     
     // Remove book from cart using $pull operator
-    await User.findByIdAndUpdate(id, { $pull: { cart: bookId } });
+    await User.findByIdAndUpdate(id, { $pull: { cart: bookid } });
     
     return res.json({
       status: "Success",

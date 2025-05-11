@@ -3,7 +3,7 @@ import User from "../models/user.model.js"
 //TO DO check this route allUser 
 const auth = async(req,res,next)=>{ 
     try {
- const token = req.cookies?.token || req.header("Authorization")?.replace("Bearer ","")
+ const token = req.cookies?.token || req.headers["authorization"]?.replace("Bearer ","")
 
      if(!token){
         return res.status(401).json({ message: 'Token does not exist' })

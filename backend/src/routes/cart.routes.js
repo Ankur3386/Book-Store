@@ -12,7 +12,7 @@ const router = Router();
 
 // Protected routes - require authentication
 router.put("/add-to-cart", auth, addToCart);
-router.put("/remove-from-cart", auth, removeFromCart);
+router.put("/remove-from-cart/:bookid", auth, removeFromCart);
 router.get("/get-cart", auth, getCart);
 router.delete("/clear-cart", auth, clearCart);
 

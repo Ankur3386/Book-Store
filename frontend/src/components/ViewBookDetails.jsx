@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react'
+import { MdDelete } from "react-icons/md";
+import { FaEdit } from "react-icons/fa";
 import Loader from '../components/Loader'
 import axios from 'axios';
 import { useParams } from 'react-router-dom'
@@ -9,7 +11,7 @@ import { useSelector } from 'react-redux'
 
 const ViewBookDetails = () => {
     const {id} = useParams()
-    console.log(id);
+    
     const [data, setData] = useState();
      const isLoggedIn=useSelector((state)=>state.auth.isloggedIn)
      const role =useSelector((state)=>state.auth.role)
@@ -22,27 +24,57 @@ const ViewBookDetails = () => {
         };
         fetch();
     }, [id])
-  
+    const headers = {
+        bookid: id,
+        id: localStorage.getItem("id"),
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        
+      };
+      console.log(headers.Authorization)
+
+  const handleFavourite = async() => {
+const response = await axios.put(`http://localhost:5000/api/v1/add-book-to-favourite`,{},{headers})
+alert(response.data.message)
+
+  }
+  const handleCart = async() => {
+    const response = await axios.put(`http://localhost:5000/api/v1/add-to-cart`,{},{headers})
+    alert(response.data.message)
+  }
     return (
         <>
         {data && (
-            <div className='px-4 md:px-12 py-8 bg-zinc-900 flex flex-col md:flex-row gap-8 items-start h-[82vh]'>
-                <div className="w-full md:w-1/2 flex justify-center">
-                        <div className="relative bg-zinc-800 rounded-xl p-6 flex justify-center items-center shadow-lg">
+            <div className='px-4 md:px-12 py-8 bg-zinc-900 flex flex-col lg:flex-row gap-8 items-start h-[82vh]'>
+                <div className="w-full md:w-1/2 flex items-center justify-center">
+                        <div className="relative bg-zinc-800 rounded-xl p-6 flex flex-col lg:flex-row justify-center items-center shadow-lg">
                             <img
                                 src={data.image}
                                 alt={data.title}
-                                className="h-[60vh] object-contain rounded-lg"
+                                className=" h-[60vh] md:h-[60vh] lg:h[70vh] object-contain rounded-lg"
                             />
-                            {isLoggedIn==true && role==="user"}
-                            <div className="absolute top-4 right-4 flex flex-col gap-4">
-                                <button className="bg-white rounded-full p-3 text-2xl text-red-500 shadow-md">
-                                    <FaHeart />
+                            {isLoggedIn==true && role==="user" && (
+                            <div className="absolute top-4 right-4 flex flex-col  md:flex-row lg:flex-col items-center justify-between lg:justify-start gap-4">
+                                <button className="bg-white rounded lg:rounded-full p-3 text-3xl text-red-500 shadow-md"
+                                onClick={handleFavourite}>
+                                    <FaHeart />   <span className='ms-4 block lg:hidden'> Favourite </span>
                                 </button>
-                                <button className="bg-white rounded-full p-3 text-2xl text-blue-500 shadow-md">
-                                    <FaShoppingCart />
+                                <button className="bg-white  rounded mt-8 md:mt-0 lg:rounded-full p-3  lg:mt-8 text-2xl text-blue-500 flex items-center justify-center"
+                                onClick={handleCart}>
+
+                                <FaShoppingCart />    <span className='ms-4 block lg:hidden'> Add To Cart  </span>
                                 </button>
                             </div>
+                            )}
+                              {isLoggedIn==true && role==="admin" && (
+                            <div className="absolute top-4 right-4 flexflex-col  md:flex-row lg:flex-col items-center justify-between lg:justify-start gap-4">
+                                <button className="bg-white rounded lg:rounded-full p-3 text-3xl  shadow-md">
+                                <FaEdit />  <span className='ms-4 block lg:hidden'> Edit  </span>
+                                </button>
+                                <button className="bg-white  rounded lg:rounded-full p-3 mt-8 md:mt-0 lg:mt-8 text-2xl text-red-500  flex items-center justify-center">
+                                <MdDelete />   <span className='ms-4 block lg:hidden'> Delete Book  </span>
+                                </button>
+                            </div>
+                            )}
                         </div>
                     </div>
                 <div className='p-4 w-full lg:w-3/6'>

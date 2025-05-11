@@ -18,8 +18,8 @@ const AllBooks = () => {
   return (
     <div className='bg-zinc-900 py-8 h-auto px-12 '>  <h4 className='text-3xl text-yellow-100'> Recently Added Books
     </h4>
-    {!data &&<div className='flex items-centre justify-centre my-8'> <Loader/> 
-    </div>}
+    {!data &&(<div className='w-full h-screen flex items-center justify-center'> <Loader /></div>) 
+    }
     <div className='my-8 grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-8'>
       
     {data &&data.map((items,i)=>(

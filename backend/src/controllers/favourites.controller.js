@@ -5,15 +5,15 @@ import { Book } from "../models/book.model.js";
 // Add book to favorites
 export const addBookToFavourite = async (req, res) => {
   try {
-    const { bookId, id } = req.headers;
+    const { bookid, id } = req.headers;
     
     // Validate bookId
-    if (!bookId) {
+    if (!bookid) {
       return res.status(400).json({ message: "Book ID is required" });
     }
     
     // Check if book exists
-    const book = await Book.findById(bookId);
+    const book = await Book.findById(bookid);
     if (!book) {
       return res.status(404).json({ message: "Book not found" });
     }
@@ -25,13 +25,13 @@ export const addBookToFavourite = async (req, res) => {
     }
     
     // Check if book is already in favorites
-    const isBookFavourite = userData.favourites.includes(bookId);
+    const isBookFavourite = userData.favourites.includes(bookid);
     if (isBookFavourite) {
       return res.status(200).json({ message: "Book is already in favourites" });
     }
     
     // Add book to favorites using $push operator
-    await User.findByIdAndUpdate(id, { $push: { favourites: bookId } });
+    await User.findByIdAndUpdate(id, { $push: { favourites: bookid } });
     
     return res.status(200).json({ message: "Book added to favourites" });
   } catch (error) {
@@ -43,10 +43,10 @@ export const addBookToFavourite = async (req, res) => {
 // Remove book from favorites
 export const removeFromFavourites = async (req, res) => {
   try {
-    const { bookId, id } = req.headers;
+    const { bookid, id } = req.headers;
     
     // Validate bookId
-    if (!bookId) {
+    if (!bookid) {
       return res.status(400).json({ message: "Book ID is required" });
     }
     
@@ -57,13 +57,13 @@ export const removeFromFavourites = async (req, res) => {
     }
     
     // Check if book is in favorites
-    const isBookFavourite = userData.favourites.includes(bookId);
+    const isBookFavourite = userData.favourites.includes(bookid);
     if (!isBookFavourite) {
       return res.status(200).json({ message: "Book is not in favourites" });
     }
     
     // Remove book from favorites using $pull operator
-    await User.findByIdAndUpdate(id, { $pull: { favourites: bookId } });
+    await User.findByIdAndUpdate(id, { $pull: { favourites: bookid } });
     
     return res.status(200).json({ message: "Book removed from favourites" });
   } catch (error) {
