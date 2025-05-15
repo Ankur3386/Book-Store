@@ -18,6 +18,7 @@ import Setting from './components/Profile/Setting'
 import  AllOrder  from './pages/AllOrder'
 import AddBook from './pages/AddBook'
 import UpdateBook from './pages/UpdateBook'
+import AboutUs from './pages/AboutUs'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -61,7 +62,7 @@ function App() {
       <Route path="/all-books" element={<AllBooks />} />
       <Route path="/update-book/:id" element={<UpdateBook />} />
       <Route path="/view-book-details/:id" element={<ViewBookDetails/>} />
-
+<Route path="/about-us" element={<AboutUs />} />
       </Routes>
 
 <Footer />
