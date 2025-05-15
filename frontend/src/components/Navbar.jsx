@@ -12,12 +12,21 @@ const Navbar = () => {
     { title: "All Books", link: "/all-books" },
     { title: "Cart", link: "/cart" },
     { title: "Profile", link: "/profile" },
+    { title: "Admin Profile", link: "/profile" },
   ];
 const isLoggedIn=useSelector((state)=>
   state.auth.isloggedIn)
+const role =useSelector((state)=>
+  state.auth.role)
 // connsole.log(isLoggedIn)
 if(isLoggedIn==false){
   links.splice(2,3)
+}
+if(isLoggedIn===true && role==="admin"){
+  links.splice(4,1)
+}
+if(isLoggedIn===true && role==="user"){
+  links.splice(5,1)
 }
   return (
     <>
@@ -34,7 +43,7 @@ if(isLoggedIn==false){
         {/* Desktop Links */}
         <div className="hidden md:flex items-center gap-4">
   {links.map((item, i) => (
-    item.title === "Profile" ? (
+    item.title === "Profile"||  item.title === "Admin Profile" ? (
       <Link
         to={item.link}
         className="text-white text-xl border border-blue-500 px-4 py-2"

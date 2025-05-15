@@ -15,6 +15,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import Favourites from './components/Profile/Favourites'
 import UserOrderHistory from './components/Profile/UserOrderHistory'
 import Setting from './components/Profile/Setting'
+import  AllOrder  from './pages/AllOrder'
+import AddBook from './pages/AddBook'
+import UpdateBook from './pages/UpdateBook'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -41,13 +44,22 @@ function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/cart" element={<Cart />} />
       <Route path="/profile" element={<Profile />} >
-      <Route index element={<Favourites/>} />
+     {role==="user"  ?
+       (<Route index element={<Favourites/>} />)
+       : (<Route index element={<AllOrder/>} />)
+     }
+     {
+      role==="admin" && (
+        <Route path="/profile/add-book" element={<AddBook />} />
+      )
+     }
       {/* index means route  profile pa jate hi  favourites ha */}
       <Route path="/profile/orderHistory" element={<UserOrderHistory />} />
       <Route path="/profile/settings" element={<Setting />} />
 
       </Route>
       <Route path="/all-books" element={<AllBooks />} />
+      <Route path="/update-book/:id" element={<UpdateBook />} />
       <Route path="/view-book-details/:id" element={<ViewBookDetails/>} />
 
       </Routes>

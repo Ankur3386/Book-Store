@@ -98,25 +98,48 @@ export const getRecentBooks = async (req, res) => {
 // Update book
 export const updateBook = async (req, res) => {
   try {
-    const { bookId } = req.headers;
-    const { title, author, price, desc, language } = req.body;
-    
-    await Book.findByIdAndUpdate(bookId, {
-      title,
-      author,
-      price,
-      desc,
-      language,
+    const { bookid: bookId } = req.headers;
+
+    if (!bookId) {
+      return res.status(400).json({ message: "Book ID is required in headers" });
+    }
+
+    const updateData = {};
+
+    // Only add fields that are present in the request body
+    ["title", "author", "price", "desc", "language"].forEach(field => {
+      if (req.body[field]) {
+        updateData[field] = req.body[field];
+      }
     });
-    
+
+    // Handle optional image upload
+    if (req.file) {
+      const uploadResult = await uploadOnCloudinary(req.file.path);
+      if (!uploadResult?.url) {
+        return res.status(500).json({ message: "Image upload failed" });
+      }
+      updateData.image = uploadResult.url;
+    }
+
+    const updatedBook = await Book.findByIdAndUpdate(bookId, updateData, { new: true });
+
+    if (!updatedBook) {
+      return res.status(404).json({ message: "Book not found" });
+    }
+
     return res.status(200).json({
-      message: "Book Updated successfully!",
+      success: true,
+      message: "Book updated successfully!",
+      book: updatedBook
     });
+
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "An error occurred" });
+    console.error(error);
+    return res.status(500).json({ message: "Something went wrong" });
   }
 };
+
 // Delete book
 export const deleteBook = async (req, res) => {
     try {

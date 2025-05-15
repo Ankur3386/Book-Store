@@ -112,6 +112,28 @@ export const getOrderDetails = async (req, res) => {
     return res.status(500).json({ message: "An error occurred" });
   }
 };
+export const getAllOrderDetails = async (req, res) => {
+  try {
+    
+    
+    // Find order and populate user and book details
+    const order = await Order.find()
+      .populate('user', '-password')
+      .populate('book').sort({createdAt:-1});
+    
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+    
+    return res.json({
+      status: "Success",
+      order
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "An error occurred" });
+  }
+};
 
 // Update order status (admin only)
 export const updateOrderStatus = async (req, res) => {
@@ -120,7 +142,7 @@ export const updateOrderStatus = async (req, res) => {
     const { status } = req.body;
     
     // Validate status
-    const validStatuses = ["order placed", "out for delivery", "Delivered", "cancelled"];
+    const validStatuses = ["Order placed","Out for delivery","Delivered","Cancelled"];
     if (!validStatuses.includes(status)) {
       return res.status(400).json({ message: "Invalid order status" });
     }

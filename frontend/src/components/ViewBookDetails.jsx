@@ -3,7 +3,7 @@ import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
 import Loader from '../components/Loader'
 import axios from 'axios';
-import { useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { GrLanguage } from "react-icons/gr"
 import { FaHeart } from "react-icons/fa"
 import { FaShoppingCart } from "react-icons/fa";
@@ -15,7 +15,7 @@ const ViewBookDetails = () => {
     const [data, setData] = useState();
      const isLoggedIn=useSelector((state)=>state.auth.isloggedIn)
      const role =useSelector((state)=>state.auth.role)
-
+const navigate = useNavigate()
     useEffect(() => {
         const fetch = async() => {
             const response = await axios.get(`http://localhost:5000/api/v1/book/${id}`)
@@ -23,14 +23,13 @@ const ViewBookDetails = () => {
             setData(response.data.book);
         };
         fetch();
-    }, [id])
+    }, [])
     const headers = {
         bookid: id,
         id: localStorage.getItem("id"),
         Authorization: `Bearer ${localStorage.getItem("token")}`,
         
       };
-      console.log(headers.Authorization)
 
   const handleFavourite = async() => {
 const response = await axios.put(`http://localhost:5000/api/v1/add-book-to-favourite`,{},{headers})
@@ -40,6 +39,11 @@ alert(response.data.message)
   const handleCart = async() => {
     const response = await axios.put(`http://localhost:5000/api/v1/add-to-cart`,{},{headers})
     alert(response.data.message)
+  };
+  const deleteBook = async() => {
+    const response = await axios.delete(`http://localhost:5000/api/v1/delete-book/${id}`,{headers})
+    alert(response.data.message)
+    navigate('/all-books');
   }
     return (
         <>
@@ -67,10 +71,11 @@ alert(response.data.message)
                             )}
                               {isLoggedIn==true && role==="admin" && (
                             <div className="absolute top-4 right-4 flexflex-col  md:flex-row lg:flex-col items-center justify-between lg:justify-start gap-4">
-                                <button className="bg-white rounded lg:rounded-full p-3 text-3xl  shadow-md">
+                                <Link to={`/update-book/${id}`} className="bg-white rounded lg:rounded-full p-3 text-3xl flex  shadow-md">
                                 <FaEdit />  <span className='ms-4 block lg:hidden'> Edit  </span>
-                                </button>
-                                <button className="bg-white  rounded lg:rounded-full p-3 mt-8 md:mt-0 lg:mt-8 text-2xl text-red-500  flex items-center justify-center">
+                                </Link>
+                                <button className="bg-white  rounded lg:rounded-full p-3 mt-8 md:mt-0 lg:mt-8 text-2xl text-red-500  flex items-center justify-center"
+                                onClick={deleteBook}>
                                 <MdDelete />   <span className='ms-4 block lg:hidden'> Delete Book  </span>
                                 </button>
                             </div>

@@ -4,7 +4,8 @@ import {
   placeOrder, 
   getUserOrders, 
   getOrderDetails, 
-  updateOrderStatus 
+  updateOrderStatus ,
+  getAllOrderDetails
 } from "../controllers/order.controller.js";
 import auth from "../middlewares/auth.middleware.js"
 import {adminMiddleware} from "../middlewares/adminMiddleware.js"
@@ -18,5 +19,6 @@ router.get("/order/:orderId", auth, getOrderDetails);
 
 // Admin only routes
 router.put("/update-status/:orderId", auth, adminMiddleware, updateOrderStatus);
+router.get("/get-all-orders", auth, adminMiddleware, getAllOrderDetails);
 
 export default router;

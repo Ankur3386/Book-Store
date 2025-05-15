@@ -25,7 +25,7 @@ const orderSchema = new mongoose.Schema({
     status:{
         type:String,
         default:"order placed",
-        enum:["order placed","out for delivery","Delivered","cancelled"]
+        enum:["Order placed","Out for delivery","Delivered","Cancelled"]
     }
 },{timestamps:true})
 export const Order =mongoose.model("Order",orderSchema)
